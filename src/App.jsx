@@ -99,7 +99,7 @@ const App = () => {
                 </header>
                 {(isTrendingLoading || trendingMovies.length > 0) && (
                     <section className='trending'>
-                        <h2>Recommanded</h2>
+                        <h2>Recommended</h2>
                         {isTrendingLoading ? (
                             <Spinner />
                         ) : (
