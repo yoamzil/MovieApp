@@ -28,11 +28,11 @@
   }
 
   h1 {
-    @apply mx-auto max-w-4xl text-center text-5xl font-bold leading-tight tracking-[-1%] text-white sm:text-[64px] sm:leading-[76px];
+    @apply mx-auto max-w-4xl text-center text-5xl font-sans leading-tight tracking-[-1%] text-white sm:text-[64px] sm:leading-[76px];
   }
 
   h2 {
-    @apply text-2xl font-bold text-white sm:text-3xl;
+    @apply text-2xl font-sans text-white sm:text-3xl;
   }
 
   main {
@@ -140,6 +140,14 @@
       @apply text-gray-100 font-medium text-base;
     }
   }
+}
+
+.pagination {
+    @apply flex justify-between gap-2 mt-10 items-center;
+}
+
+.page-button{
+    @apply bg-dark-100 p-3 rounded-xl shadow-light-100/10 cursor-pointer;
 }
 
 @utility text-gradient {

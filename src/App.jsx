@@ -23,17 +23,19 @@ const App = () => {
     const [debounceSearchTerm, setDebounceSearchTerm] = useState('');
     const [trendingMovies, setTrendingMovies] = useState([]);
     const [isTrendingLoading, setIsTrendingLoading] = useState(false); // New state variable
+    const [currentPage, setCurrentPage] = useState(1); // New state variable for current page
+    const [totalPages, setTotalPages] = useState(1); // New state variable for total pages
 
     useDebounce(() => setDebounceSearchTerm(searchTerm), 500, [searchTerm]);
 
-    const fetchMovies = async (query = '') => {
+    const fetchMovies = async (query = '', page = 1) => {
         setIsLoading(true);
         setErrorMessage('');
 
         try {
             const endpoint = query
-                ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-                : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+                ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${page}`
+                : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc&page=${page}`;
 
             const response = await fetch(endpoint, API_OPTIONS);
             if (!response.ok) {
@@ -48,6 +50,7 @@ const App = () => {
                 return;
             }
             setMovieList(data.results || []);
+            setTotalPages(data.total_pages || 1); // Update total pages
 
             if (query && data.results.length > 0) {
                 await updateSearchCount(query, data.results[0]);
@@ -77,8 +80,8 @@ const App = () => {
     }
 
     useEffect(() => {
-        fetchMovies(debounceSearchTerm);
-    }, [debounceSearchTerm]);
+        fetchMovies(debounceSearchTerm, currentPage);
+    }, [debounceSearchTerm, currentPage]);
 
     useEffect(() => {
         loadTrendingMovies();
@@ -94,9 +97,9 @@ const App = () => {
                     <h1>Find <span className='text-gradient'>Movies</span> You'll Enjoy Without the Hassle</h1>
                     <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
                 </header>
-                {(isTrendingLoading || trendingMovies.length > 0)&& (
+                {(isTrendingLoading || trendingMovies.length > 0) && (
                     <section className='trending'>
-                        <h2>Trending Movies</h2>
+                        <h2>Recommanded</h2>
                         {isTrendingLoading ? (
                             <Spinner />
                         ) : (
@@ -112,7 +115,7 @@ const App = () => {
                     </section>
                 )}
                 <section className='all-movies'>
-                    <h2>All Movies</h2>
+                    <h2>Popular</h2>
                     {isLoading ? (
                         <Spinner />
                     ) : errorMessage ? (
@@ -124,6 +127,24 @@ const App = () => {
                             ))}
                         </ul>
                     )}
+                    {movieList.length > 0 && (
+                        <div className='pagination'>
+                            <button
+                                className='page-button'
+                                onClick={() => setCurrentPage(prevPage => Math.max(prevPage - 1, 1))}
+                                disabled={currentPage === 1}
+                            >
+                                <img src="/left-arrow.svg" alt="previous" />
+                            </button>
+                            <span className='text-white'>{currentPage}</span>
+                            <button
+                                className='page-button'
+                                onClick={() => setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages))}
+                                disabled={currentPage === totalPages}
+                            >
+                                <img src="/right-arrow.svg" alt="next" />
+                            </button>
+                        </div>)}
                 </section>
             </div>
         </main>
