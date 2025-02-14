@@ -20,4 +20,4 @@ This is a Movie Finder application built with React and Vite. It allows users to
 
 ## 🔗 Deployment
 
-This project is deployed on Vercel. You can access it [Here](https://movie-app-sigma-azure.vercel.app/)
+This project is deployed on Vercel. You can access it [Here](https://yoamzilmovie.vercel.app/)
